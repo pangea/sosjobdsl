@@ -132,11 +132,21 @@ module Sosjobdsl
               end
               
               unless self.weekdays.nil?
-                xml.weekdays {
-                  xml.day({
-                    :day => self.weekdays
-                  })
-                }
+                if self.schedule_opts[:repeat] == "00:00:00"
+                  xml.weekdays {
+                    xml.day("day" => self.weekdays) {
+                      xml.period({
+                        :single_start => self.schedule_opts[:begin]
+                      })
+                    }
+                  }
+                else
+                  xml.weekdays {
+                    xml.day({
+                      :day => self.weekdays
+                    })
+                  }
+                end
               end
 
               unless self.monthdays[
